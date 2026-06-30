@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { AppointmentForm } from '@/components/AppointmentForm'
+import { DeleteAccountModal } from '@/components/DeleteAccountModal'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -42,15 +43,18 @@ export default async function DashboardPage() {
           </nav>
         </div>
         
-        {/* User Info */}
-        <div className="flex items-center gap-3 border-t border-border pt-4">
-          <div className="w-9 h-9 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-white font-bold text-sm shadow-inner">
-            {user?.email?.charAt(0).toUpperCase()}
+        {/* User Info & Settings */}
+        <div className="flex flex-col border-t border-border pt-4 mt-auto">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-white font-bold text-sm shadow-inner shrink-0">
+              {user?.email?.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-sm font-medium text-white truncate">Meu Perfil</span>
+              <span className="text-xs text-text-muted truncate w-36">{user?.email}</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-white">Meu Perfil</span>
-            <span className="text-xs text-text-muted truncate w-36">{user?.email}</span>
-          </div>
+          <DeleteAccountModal />
         </div>
       </aside>
 
