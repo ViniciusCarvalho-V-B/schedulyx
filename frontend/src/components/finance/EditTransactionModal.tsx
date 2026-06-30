@@ -81,10 +81,10 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
       />
       
       {/* Modal */}
-      <main className="relative z-[110] w-full max-w-md bg-surface border border-primary/20 rounded-xl shadow-2xl flex flex-col overflow-hidden animate-zoom-in">
+      <main className="relative z-[110] w-full max-w-md bg-surface border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden animate-zoom-in">
         
         {/* Modal Header */}
-        <header className="flex items-center justify-between px-6 py-5 border-b border-primary/20 bg-surface">
+        <header className="flex items-center justify-between px-6 py-5 border-b border-border bg-surface">
           <div className="flex items-center gap-3">
             <Edit2 className="w-5 h-5 text-text-muted" />
             <h2 className="text-lg font-semibold text-white">Editar Transação</h2>
@@ -101,7 +101,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
         <form ref={formRef} action={handleSubmit} id={`edit-form-${transaction.id}`} className="p-6 flex flex-col gap-5 overflow-y-auto max-h-[70vh]">
           
           {/* Field Group: Description */}
-          <div className="bg-surface-container-lowest border border-primary/20 rounded-xl p-4 flex flex-col gap-3">
+          <div className="bg-surface-container-low border border-border rounded-xl p-4 flex flex-col gap-3">
             <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
               <FileText className="w-4 h-4" />
               Descrição
@@ -110,12 +110,12 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
               name="description"
               required
               defaultValue={transaction.description}
-              className="w-full bg-surface-container-low border border-primary/20 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
+              className="w-full bg-surface-container-low border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
             />
           </div>
 
           {/* Field Group: Value and Type */}
-          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-lowest border border-primary/20 rounded-xl p-4">
+          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-low border border-border rounded-xl p-4">
             
             <div className="flex-1 flex flex-col gap-3">
               <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
@@ -129,7 +129,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
                 min="0.01"
                 required
                 defaultValue={transaction.amount}
-                className="w-full bg-surface-container-low border border-primary/20 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
+                className="w-full bg-surface-container-low border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
               />
             </div>
             
@@ -160,7 +160,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
           </div>
 
           {/* Field Group: Status */}
-          <div className="bg-surface-container-lowest border border-primary/20 rounded-xl p-4 flex flex-col gap-3">
+          <div className="bg-surface-container-low border border-border rounded-xl p-4 flex flex-col gap-3">
             <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
               <CheckCircle2 className="w-4 h-4" />
               Status
@@ -184,7 +184,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
         </form>
 
         {/* Modal Footer */}
-        <footer className="px-6 py-5 border-t border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest/30">
+        <footer className="px-6 py-5 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-low/30">
           <button 
             type="button" 
             onClick={() => setShowConfirm(true)}
@@ -199,7 +199,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
             <button 
               type="button" 
               onClick={() => setIsOpen(false)}
-              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-primary/20 text-text-muted hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-1 focus:ring-outline text-sm font-medium"
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-border text-text-muted hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-1 focus:ring-outline text-sm font-medium"
             >
               Cancelar
             </button>

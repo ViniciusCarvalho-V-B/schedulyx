@@ -72,10 +72,10 @@ export function AppointmentForm() {
       
       {/* Drawer Slide-over Panel */}
       <aside className="fixed inset-y-0 right-0 z-[110] flex max-w-full w-[480px] animate-slide-in-right">
-        <div className="w-full flex flex-col bg-surface shadow-2xl border-l border-outline-variant h-full overflow-hidden">
+        <div className="w-full flex flex-col bg-surface shadow-2xl border-l border-border h-full overflow-hidden">
           
           {/* Drawer Header */}
-          <header className="flex items-center justify-between px-6 py-5 border-b border-outline-variant bg-surface shrink-0">
+          <header className="flex items-center justify-between px-6 py-5 border-b border-border bg-surface shrink-0">
             <h2 className="text-xl font-semibold text-white tracking-tight">Novo Agendamento</h2>
             <button 
               onClick={() => setIsOpen(false)}
@@ -118,7 +118,7 @@ export function AppointmentForm() {
                       name="service_name" 
                       id="service_name" 
                       required
-                      className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-colors py-2.5 px-3" 
+                      className="custom-input block w-full rounded-xl border border-border bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-colors py-2.5 px-3" 
                       placeholder="Ex: Consultoria de Vendas" 
                       type="text"
                     />
@@ -143,7 +143,7 @@ export function AppointmentForm() {
                         step="0.01"
                         min="0"
                         required
-                        className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm pl-9 transition-colors py-2.5 pr-3" 
+                        className="custom-input block w-full rounded-xl border border-border bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm pl-9 transition-colors py-2.5 pr-3" 
                         placeholder="0,00"
                       />
                     </div>
@@ -162,14 +162,14 @@ export function AppointmentForm() {
                         <Popover.Trigger asChild>
                           <button
                             type="button"
-                            className="custom-input flex w-full items-center justify-between rounded-xl border border-primary/20 bg-surface-container-low text-white focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3"
+                            className="custom-input flex w-full items-center justify-between rounded-xl border border-border bg-surface-container-low text-white focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3"
                           >
                             <span>{date ? format(date, 'dd/MM/yyyy') : 'Selecionar'}</span>
                             <CalendarIcon className="h-4 w-4 text-text-muted" />
                           </button>
                         </Popover.Trigger>
                         <Popover.Portal>
-                          <Popover.Content className="z-[120] bg-surface-container border border-primary/20 rounded-xl p-3 shadow-xl text-white">
+                          <Popover.Content className="z-[120] bg-surface-container border border-border rounded-xl p-3 shadow-xl text-white">
                             <DayPicker
                               mode="single"
                               selected={date}
@@ -189,7 +189,7 @@ export function AppointmentForm() {
                           id="time" 
                           type="time"
                           required
-                          className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3 [color-scheme:dark]" 
+                          className="custom-input block w-full rounded-xl border border-border bg-surface-container-low text-white focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3 [color-scheme:dark]" 
                         />
                       </div>
                     </div>
@@ -205,7 +205,7 @@ export function AppointmentForm() {
                       <button 
                         type="button"
                         onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
-                        className="custom-input relative w-full cursor-default rounded-xl border border-primary/20 bg-surface-container-low py-2.5 pl-3 pr-10 text-left text-white focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm transition-colors"
+                        className="custom-input relative w-full cursor-default rounded-xl border border-border bg-surface-container-low py-2.5 pl-3 pr-10 text-left text-white focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm transition-colors"
                       >
                         <span className="block truncate">{currentStatusLabel}</span>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -216,7 +216,7 @@ export function AppointmentForm() {
                       {statusDropdownOpen && (
                         <>
                           <div className="fixed inset-0 z-10" onClick={() => setStatusDropdownOpen(false)}></div>
-                          <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-surface-container-high py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-primary/20">
+                          <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-surface-container-high py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-border">
                             {statusOptions.map((opt) => (
                               <li 
                                 key={opt.value}
@@ -240,11 +240,11 @@ export function AppointmentForm() {
           </div>
 
           {/* Drawer Footer */}
-          <footer className="flex items-center justify-end gap-3 px-6 py-4 border-t border-outline-variant bg-surface shrink-0">
+          <footer className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0">
             <button 
               type="button" 
               onClick={() => setIsOpen(false)}
-              className="rounded-xl border border-primary/20 bg-transparent px-4 py-2.5 text-sm font-medium text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="rounded-xl border border-border bg-transparent px-4 py-2.5 text-sm font-medium text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             >
               Cancelar
             </button>
