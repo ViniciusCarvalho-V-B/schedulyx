@@ -63,11 +63,11 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                 <td className="px-6 py-4">
                   {tx.status === 'pendente' ? (
                     <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-yellow-500/10 text-yellow-500 border-yellow-500/20">
-                      Pendente
+                      {isIncome(tx.type) ? 'A Receber' : 'A Pagar'}
                     </span>
                   ) : (
                     <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
-                      Pago
+                      {isIncome(tx.type) ? 'Recebido' : 'Pago'}
                     </span>
                   )}
                 </td>
