@@ -37,9 +37,9 @@ export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
     })
   );
 
-  const todoTasks = tasks.filter(t => t.status === 'todo')
-  const inProgressTasks = tasks.filter(t => t.status === 'in_progress')
-  const doneTasks = tasks.filter(t => t.status === 'done')
+  const todoTasks = tasks.filter(t => t.status === 'pendente')
+  const inProgressTasks = tasks.filter(t => t.status === 'confirmado')
+  const doneTasks = tasks.filter(t => t.status === 'concluído')
 
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
@@ -126,9 +126,9 @@ export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
       onDragEnd={handleDragEnd}
     >
       <div className="flex-1 flex gap-6 overflow-x-auto h-full items-start pb-4">
-        <KanbanColumn id="todo" title="A Fazer" tasks={todoTasks} />
-        <KanbanColumn id="in_progress" title="Em Andamento" tasks={inProgressTasks} />
-        <KanbanColumn id="done" title="Concluído" tasks={doneTasks} />
+        <KanbanColumn id="pendente" title="A Fazer (Pendente)" tasks={todoTasks} />
+        <KanbanColumn id="confirmado" title="Em Andamento (Confirmado)" tasks={inProgressTasks} />
+        <KanbanColumn id="concluído" title="Concluído" tasks={doneTasks} />
       </div>
 
       <DragOverlay>

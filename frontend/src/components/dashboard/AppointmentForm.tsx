@@ -88,16 +88,31 @@ export function AppointmentForm() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-medium text-text-muted">Valor (R$)</label>
-            <input 
-              type="number" 
-              name="price" 
-              step="0.01"
-              required
-              placeholder="0.00"
-              className="w-full bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-medium text-text-muted">Valor (R$)</label>
+              <input 
+                type="number" 
+                name="price" 
+                step="0.01"
+                required
+                placeholder="0.00"
+                className="w-full bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+              />
+            </div>
+            
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-medium text-text-muted">Status Inicial</label>
+              <select 
+                name="status"
+                defaultValue="pendente"
+                className="w-full bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+              >
+                <option value="pendente">Pendente</option>
+                <option value="confirmado">Confirmado</option>
+                <option value="concluído">Concluído</option>
+              </select>
+            </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-border flex justify-end gap-3">

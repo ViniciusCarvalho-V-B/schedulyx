@@ -10,6 +10,7 @@ export async function createAppointment(formData: FormData) {
   const date = formData.get('date') as string
   const time = formData.get('time') as string
   const priceStr = formData.get('price') as string
+  const status = formData.get('status') as string || 'pendente'
   
   if (!serviceName || !date || !time || !priceStr) {
     return { error: 'Por favor, preencha todos os campos.' }
@@ -28,7 +29,7 @@ export async function createAppointment(formData: FormData) {
     date: date,
     time: time,
     price: price,
-    status: 'confirmado' // Para disparar a Trigger de criação da Task!
+    status: status
   })
 
   if (error) {

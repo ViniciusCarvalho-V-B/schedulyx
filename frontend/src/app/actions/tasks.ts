@@ -2,7 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 
-export type TaskStatus = 'todo' | 'in_progress' | 'done'
+export type TaskStatus = 'pendente' | 'confirmado' | 'concluído'
 
 export async function updateTaskStatus(taskId: string, newStatus: TaskStatus) {
   try {
@@ -14,13 +14,13 @@ export async function updateTaskStatus(taskId: string, newStatus: TaskStatus) {
     }
 
     const { error } = await supabase
-      .from('tasks')
+      .from('appointments')
       .update({ status: newStatus })
       .eq('id', taskId)
 
     if (error) {
-      console.error("Erro ao atualizar task:", error)
-      return { success: false, error: "Falha ao atualizar a tarefa no banco de dados." }
+      console.error("Erro ao atualizar status do agendamento:", error)
+      return { success: false, error: "Falha ao atualizar o agendamento no banco de dados." }
     }
 
     return { success: true }
