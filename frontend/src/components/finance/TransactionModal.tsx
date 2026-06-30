@@ -10,6 +10,7 @@ export function TransactionModal() {
   const [isPending, setIsPending] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const [mounted, setMounted] = useState(false)
+  const [transactionType, setTransactionType] = useState('income')
 
   useEffect(() => {
     setMounted(true)
@@ -90,10 +91,12 @@ export function TransactionModal() {
               <select
                 name="type"
                 required
+                value={transactionType}
+                onChange={(e) => setTransactionType(e.target.value)}
                 className="w-full bg-surface-container-low border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
               >
-                <option value="income">Receita / Entrada</option>
-                <option value="expense">Despesa / Saída</option>
+                <option value="income">Receita</option>
+                <option value="expense">Despesa</option>
               </select>
             </div>
           </div>
@@ -104,8 +107,17 @@ export function TransactionModal() {
               name="status" 
               className="bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
             >
-              <option value="pago">Pago / Recebido</option>
-              <option value="pendente">Pendente / A Receber</option>
+              {transactionType === 'income' ? (
+                <>
+                  <option value="pago">Recebido</option>
+                  <option value="pendente">A Receber</option>
+                </>
+              ) : (
+                <>
+                  <option value="pago">Pago</option>
+                  <option value="pendente">A Pagar</option>
+                </>
+              )}
             </select>
           </div>
 

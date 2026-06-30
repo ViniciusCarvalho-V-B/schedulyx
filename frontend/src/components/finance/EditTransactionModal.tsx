@@ -22,6 +22,9 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
   const formRef = useRef<HTMLFormElement>(null)
   const [mounted, setMounted] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  
+  const initialType = transaction.type === 'entrada' ? 'income' : transaction.type === 'saida' ? 'expense' : transaction.type
+  const [transactionType, setTransactionType] = useState(initialType)
 
   useEffect(() => {
     setMounted(true)
@@ -117,12 +120,13 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
               <label className="text-xs font-medium text-text-muted mb-1 block">Tipo</label>
               <select
                 name="type"
-                defaultValue={transaction.type === 'entrada' ? 'income' : transaction.type === 'saida' ? 'expense' : transaction.type}
+                value={transactionType}
+                onChange={(e) => setTransactionType(e.target.value)}
                 required
                 className="w-full bg-surface-container-low border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
               >
-                <option value="income">Receita / Entrada</option>
-                <option value="expense">Despesa / Saída</option>
+                <option value="income">Receita</option>
+                <option value="expense">Despesa</option>
               </select>
             </div>
           </div>
@@ -134,8 +138,17 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
               defaultValue={transaction.status}
               className="bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
             >
-              <option value="pago">Pago / Recebido</option>
-              <option value="pendente">Pendente / A Receber</option>
+              {transactionType === 'income' ? (
+                <>
+                  <option value="pago">Recebido</option>
+                  <option value="pendente">A Receber</option>
+                </>
+              ) : (
+                <>
+                  <option value="pago">Pago</option>
+                  <option value="pendente">A Pagar</option>
+                </>
+              )}
             </select>
           </div>
 
