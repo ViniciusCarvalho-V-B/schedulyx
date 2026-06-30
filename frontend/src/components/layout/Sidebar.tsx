@@ -1,4 +1,18 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
 export default function Sidebar() {
+  const pathname = usePathname()
+
+  const navItems = [
+    { name: 'Dashboard', path: '/', icon: 'dashboard' },
+    { name: 'Agenda', path: '/agenda', icon: 'calendar_today' },
+    { name: 'Kanban', path: '/kanban', icon: 'view_kanban' },
+    { name: 'Financeiro', path: '/finance', icon: 'payments' },
+  ]
+
   return (
     <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 flex-col bg-surface border-r border-border z-50">
       <div className="px-6 py-6 flex items-center gap-4 border-b border-border">
@@ -14,38 +28,34 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 py-6 px-3 space-y-1">
-        {/* Active Tab */}
-        <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container-highest text-primary font-bold border-r-2 border-primary transition-all duration-200 ease-in-out">
-          <span className="material-symbols-outlined">dashboard</span>
-          <span className="text-sm">Dashboard</span>
-        </a>
-
-        {/* Inactive Tabs */}
-        <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
-          <span className="material-symbols-outlined">calendar_today</span>
-          <span>Agenda</span>
-        </a>
-
-        <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
-          <span className="material-symbols-outlined">view_kanban</span>
-          <span>Kanban</span>
-        </a>
-
-        <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
-          <span className="material-symbols-outlined">payments</span>
-          <span>Financeiro</span>
-        </a>
+        {navItems.map((item) => {
+          const isActive = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
+          return (
+            <Link 
+              key={item.path} 
+              href={item.path} 
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 ease-in-out ${
+                isActive 
+                  ? 'bg-surface-container-highest text-primary font-bold border-r-2 border-primary' 
+                  : 'text-text-muted hover:bg-surface-container-high hover:text-on-surface'
+              }`}
+            >
+              <span className="material-symbols-outlined">{item.icon}</span>
+              <span>{item.name}</span>
+            </Link>
+          )
+        })}
       </nav>
 
       <div className="px-3 pb-6 border-t border-border pt-4 space-y-1">
-        <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
+        <Link href="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
           <span className="material-symbols-outlined">account_circle</span>
           <span>Profile</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
+        </Link>
+        <Link href="/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted text-sm hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
           <span className="material-symbols-outlined">settings</span>
           <span>Settings</span>
-        </a>
+        </Link>
       </div>
     </aside>
   );
