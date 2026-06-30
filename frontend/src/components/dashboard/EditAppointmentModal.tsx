@@ -145,7 +145,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
               >
                 <option value="pendente">Pendente</option>
                 <option value="confirmado">Confirmado</option>
-                <option value="concluído">Concluído</option>
+                <option value="concluido">Concluído</option>
               </select>
             </div>
           </div>
