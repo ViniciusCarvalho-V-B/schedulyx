@@ -57,7 +57,7 @@ export default async function DashboardPage() {
                         {apt.status === 'confirmado' && (
                           <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Confirmado</span>
                         )}
-                        {apt.status === 'concluido' && (
+                        {apt.status === 'completed' && (
                           <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Concluído</span>
                         )}
                         {apt.status === 'cancelado' && (

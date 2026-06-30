@@ -3,6 +3,7 @@ interface Transaction {
   description: string;
   amount: number;
   type: 'entrada' | 'saida' | 'income' | 'expense';
+  status?: string;
   date: string;
 }
 
@@ -32,6 +33,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Data</th>
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Descrição</th>
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Tipo</th>
+            <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Status</th>
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px] text-right">Valor</th>
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px] text-right">Ações</th>
           </tr>
@@ -39,7 +41,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
         <tbody className="divide-y divide-border">
           {transactions.length === 0 ? (
             <tr>
-              <td colSpan={4} className="px-6 py-16 text-center text-text-muted text-sm">
+              <td colSpan={5} className="px-6 py-16 text-center text-text-muted text-sm">
                 <span className="material-symbols-outlined text-[32px] text-border-bright block mb-3 opacity-50">receipt_long</span>
                 Nenhuma transação financeira registrada.
               </td>
@@ -57,6 +59,17 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                   }`}>
                     {isIncome(tx.type) ? 'Receita' : 'Despesa'}
                   </span>
+                </td>
+                <td className="px-6 py-4">
+                  {tx.status === 'pendente' ? (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-yellow-500/10 text-yellow-500 border-yellow-500/20">
+                      Pendente
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
+                      Pago
+                    </span>
+                  )}
                 </td>
                 <td className={`px-6 py-4 font-bold text-right ${
                   isIncome(tx.type) ? 'text-success' : 'text-error'
