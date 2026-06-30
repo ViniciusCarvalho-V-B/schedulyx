@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { login, signup } from "@/app/actions/auth";
+import { login } from "@/app/actions/auth";
 import { PasswordInput } from "@/components/PasswordInput";
 
 export default async function LoginPage(props: { searchParams: Promise<{ error?: string }> }) {
@@ -87,7 +87,7 @@ export default async function LoginPage(props: { searchParams: Promise<{ error?:
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-[20px]">mail</span>
                 <input 
-                  className="w-full bg-background border border-border rounded-lg py-2.5 pl-10 pr-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all" 
+                  className="w-full bg-background border border-border rounded-lg py-2.5 pl-10 pr-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-300 ease-in-out" 
                   id="email" 
                   name="email" 
                   placeholder="nome@empresa.com" 
@@ -113,7 +113,7 @@ export default async function LoginPage(props: { searchParams: Promise<{ error?:
             </button>
           {/* Signup Link */}
           <div className="text-center text-text-muted text-sm mt-[-8px]">
-            Não tem uma conta? <button type="submit" formAction={signup} className="text-primary hover:underline font-medium cursor-pointer">Cadastre-se</button>
+            Não tem uma conta? <Link href="/register" className="text-primary hover:underline font-medium cursor-pointer transition-all duration-300 ease-in-out">Cadastre-se</Link>
           </div>
           </form>
 
