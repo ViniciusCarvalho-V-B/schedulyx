@@ -52,12 +52,12 @@ export function TransactionModal() {
     <div className="fixed inset-0 z-[100] flex">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in"
         onClick={() => setIsOpen(false)}
       />
       
       {/* Drawer Slide-over Panel */}
-      <aside className="fixed inset-y-0 right-0 z-[110] flex max-w-full w-[480px] animate-in slide-in-from-right duration-300">
+      <aside className="fixed inset-y-0 right-0 z-[110] flex max-w-full w-[480px] animate-slide-in-right">
         <div className="w-full flex flex-col bg-surface shadow-2xl border-l border-outline-variant h-full overflow-hidden">
           {/* Drawer Header */}
           <header className="flex items-center justify-between px-6 py-5 border-b border-outline-variant bg-surface shrink-0">
@@ -84,7 +84,7 @@ export function TransactionModal() {
                       name="description" 
                       id="description" 
                       required
-                      className="custom-input block w-full rounded-xl border border-outline-variant/30 bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-colors py-2.5 px-3" 
+                      className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-colors py-2.5 px-3" 
                       placeholder="Ex: Consultoria Técnica" 
                       type="text"
                     />
@@ -109,7 +109,7 @@ export function TransactionModal() {
                         step="0.01"
                         min="0.01"
                         required
-                        className="custom-input block w-full rounded-xl border border-outline-variant/30 bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm pl-9 transition-colors py-2.5 pr-3" 
+                        className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white placeholder:text-text-muted/50 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm pl-9 transition-colors py-2.5 pr-3" 
                         placeholder="0,00"
                       />
                     </div>
@@ -118,7 +118,7 @@ export function TransactionModal() {
                   {/* Segmented Control for Type */}
                   <div>
                     <span className="block text-sm font-medium text-white mb-2">Tipo</span>
-                    <div className="flex rounded-xl bg-surface-container p-1 border border-outline-variant/30">
+                    <div className="flex rounded-xl bg-surface-container p-1 border border-primary/20">
                       <button 
                         type="button" 
                         onClick={() => { setTransactionType('income'); setStatus('pago'); }}
@@ -158,7 +158,7 @@ export function TransactionModal() {
                           name="data" 
                           id="data" 
                           type="date"
-                          className="custom-input block w-full rounded-xl border border-outline-variant/30 bg-surface-container-low text-white focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3 [color-scheme:dark]" 
+                          className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3 [color-scheme:dark]" 
                         />
                       </div>
                     </div>
@@ -169,7 +169,7 @@ export function TransactionModal() {
                           name="hora" 
                           id="hora" 
                           type="time"
-                          className="custom-input block w-full rounded-xl border border-outline-variant/30 bg-surface-container-low text-white focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3 [color-scheme:dark]" 
+                          className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white focus:ring-1 focus:ring-primary sm:text-sm transition-colors py-2.5 px-3 [color-scheme:dark]" 
                         />
                       </div>
                     </div>
@@ -185,7 +185,7 @@ export function TransactionModal() {
                       <button 
                         type="button"
                         onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
-                        className="custom-input relative w-full cursor-default rounded-xl border border-outline-variant/30 bg-surface-container-low py-2.5 pl-3 pr-10 text-left text-white focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm transition-colors"
+                        className="custom-input relative w-full cursor-default rounded-xl border border-primary/20 bg-surface-container-low py-2.5 pl-3 pr-10 text-left text-white focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm transition-colors"
                       >
                         <span className="block truncate">{currentStatusLabel}</span>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -196,7 +196,7 @@ export function TransactionModal() {
                       {statusDropdownOpen && (
                         <>
                           <div className="fixed inset-0 z-10" onClick={() => setStatusDropdownOpen(false)}></div>
-                          <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-surface-container-high py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-outline-variant/30">
+                          <ul className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-surface-container-high py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-primary/20">
                             {statusOptions.map((opt) => (
                               <li 
                                 key={opt.value}
@@ -219,7 +219,7 @@ export function TransactionModal() {
                     <select 
                       name="category" 
                       id="category"
-                      className="custom-input block w-full rounded-xl border border-outline-variant/30 bg-surface-container-low text-white focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-colors py-2.5 px-3"
+                      className="custom-input block w-full rounded-xl border border-primary/20 bg-surface-container-low text-white focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-colors py-2.5 px-3"
                     >
                       <option value="">Selecione...</option>
                       <option value="servicos">Serviços</option>
@@ -238,7 +238,7 @@ export function TransactionModal() {
             <button 
               type="button" 
               onClick={() => setIsOpen(false)}
-              className="rounded-xl border border-outline-variant/50 bg-transparent px-4 py-2.5 text-sm font-medium text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="rounded-xl border border-primary/20 bg-transparent px-4 py-2.5 text-sm font-medium text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             >
               Cancelar
             </button>

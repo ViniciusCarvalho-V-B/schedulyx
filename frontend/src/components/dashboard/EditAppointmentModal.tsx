@@ -74,15 +74,15 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
         onClick={() => setIsOpen(false)}
       />
       
       {/* Modal */}
-      <main className="relative z-[110] w-full max-w-md bg-surface border border-outline-variant/30 rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <main className="relative z-[110] w-full max-w-md bg-surface border border-primary/20 rounded-xl shadow-2xl flex flex-col overflow-hidden animate-zoom-in">
         
         {/* Header Modal */}
-        <header className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/30 bg-surface">
+        <header className="flex items-center justify-between px-6 py-5 border-b border-primary/20 bg-surface">
           <div className="flex items-center gap-3">
             <Edit2 className="w-5 h-5 text-text-muted" />
             <h2 className="text-lg font-semibold text-white">Editar Agendamento</h2>
@@ -99,7 +99,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
         {/* Form */}
         <form id={`edit-apt-form-${appointment.id}`} onSubmit={handleSubmit} className="p-6 flex flex-col gap-5 overflow-y-auto max-h-[70vh]">
           
-          <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex flex-col gap-3">
+          <div className="bg-surface-container-lowest border border-primary/20 rounded-xl p-4 flex flex-col gap-3">
             <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
               <FileText className="w-4 h-4" />
               Nome do Serviço
@@ -108,11 +108,11 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
               name="service_name"
               required
               defaultValue={appointment.service_name}
-              className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
+              className="w-full bg-surface-container-low border border-primary/20 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4">
+          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-lowest border border-primary/20 rounded-xl p-4">
             <div className="flex-1 flex flex-col gap-3">
               <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
                 <CalendarIcon className="w-4 h-4" />
@@ -123,7 +123,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
                 type="date"
                 required
                 defaultValue={appointment.date}
-                className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm [color-scheme:dark]"
+                className="w-full bg-surface-container-low border border-primary/20 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm [color-scheme:dark]"
               />
             </div>
             
@@ -137,12 +137,12 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
                 type="time"
                 required
                 defaultValue={appointment.time}
-                className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm [color-scheme:dark]"
+                className="w-full bg-surface-container-low border border-primary/20 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm [color-scheme:dark]"
               />
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4">
+          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-lowest border border-primary/20 rounded-xl p-4">
             <div className="flex-1 flex flex-col gap-3">
               <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
                 <DollarSign className="w-4 h-4" />
@@ -155,7 +155,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
                 min="0"
                 required
                 defaultValue={appointment.price}
-                className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
+                className="w-full bg-surface-container-low border border-primary/20 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
               />
             </div>
             
@@ -185,7 +185,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
         </form>
 
         {/* Modal Footer */}
-        <footer className="px-6 py-5 border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest/30">
+        <footer className="px-6 py-5 border-t border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest/30">
           <button 
             type="button" 
             onClick={() => setShowConfirm(true)}
@@ -200,7 +200,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
             <button 
               type="button" 
               onClick={() => setIsOpen(false)}
-              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-outline-variant/50 text-text-muted hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-1 focus:ring-outline text-sm font-medium"
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-primary/20 text-text-muted hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-1 focus:ring-outline text-sm font-medium"
             >
               Cancelar
             </button>
