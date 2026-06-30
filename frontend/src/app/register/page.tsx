@@ -8,23 +8,31 @@ import { signUpWithPassword } from '@/app/actions/auth'
 
 export default function RegisterPage() {
   const router = useRouter()
+  
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  
   const [isLoading, setIsLoading] = useState(false)
   const [errorState, setErrorState] = useState<string | null>(null)
 
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    
+    if (password !== confirmPassword) {
+      setErrorState("As senhas não coincidem. Tente novamente.")
+      return
+    }
+
     setIsLoading(true)
     setErrorState(null)
     
-    const formData = new FormData(e.currentTarget)
-    const password = formData.get('password') as string
-    const confirmPassword = formData.get('confirmPassword') as string
-
-    if (password !== confirmPassword) {
-      setErrorState("As senhas não coincidem. Tente novamente.")
-      setIsLoading(false)
-      return
-    }
+    // Wrap states into FormData for the Server Action
+    const formData = new FormData()
+    formData.append('fullName', fullName)
+    formData.append('email', email)
+    formData.append('password', password)
     
     try {
       const result = await signUpWithPassword(formData)
@@ -110,24 +118,26 @@ export default function RegisterPage() {
 
             {/* Nome Completo */}
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted" htmlFor="fullName">Nome Completo</label>
+              <label className="text-xs font-medium text-text-muted" htmlFor="fullName">Nome do Estabelecimento ou Nome Completo</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-[20px]">person</span>
                 <input 
                   className="w-full bg-background border border-border rounded-lg py-2.5 pl-10 pr-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-300 ease-in-out" 
                   id="fullName" 
                   name="fullName" 
-                  placeholder="Seu nome" 
+                  placeholder="Ex: Barbearia Premium ou João Silva" 
                   required 
                   type="text" 
                   disabled={isLoading}
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                 />
               </div>
             </div>
 
             {/* Email */}
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted" htmlFor="email">Email Corporativo</label>
+              <label className="text-xs font-medium text-text-muted" htmlFor="email">E-mail Profissional</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-[20px]">mail</span>
                 <input 
@@ -138,33 +148,39 @@ export default function RegisterPage() {
                   required 
                   type="email" 
                   disabled={isLoading}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
 
             {/* Password */}
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted" htmlFor="password">Senha Segura</label>
+              <label className="text-xs font-medium text-text-muted" htmlFor="password">Senha</label>
               <div className={`transition-all duration-300 ease-in-out ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
-                <PasswordInput />
+                <PasswordInput 
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                  disabled={isLoading}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
             </div>
 
             {/* Confirm Password */}
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted" htmlFor="confirmPassword">Confirmação de Senha</label>
+              <label className="text-xs font-medium text-text-muted" htmlFor="confirmPassword">Confirme sua Senha</label>
               <div className={`transition-all duration-300 ease-in-out ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-[20px]">lock</span>
-                  <input 
-                    className="w-full bg-background border border-border rounded-lg py-2.5 pl-10 pr-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-300 ease-in-out" 
-                    id="confirmPassword" 
-                    name="confirmPassword" 
-                    placeholder="••••••••" 
-                    required 
-                    type="password" 
-                  />
-                </div>
+                <PasswordInput 
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="••••••••"
+                  disabled={isLoading}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
               </div>
             </div>
 
@@ -177,21 +193,22 @@ export default function RegisterPage() {
               {isLoading ? (
                 <>
                   <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                  Criando infraestrutura...
+                  Criando Conta...
                 </>
               ) : (
                 <>
-                  Finalizar Cadastro
+                  Criar Conta
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </>
               )}
             </button>
             
-            {/* Login Link */}
-            <div className="text-center text-text-muted text-sm mt-[-8px]">
-              Já tem uma conta? <Link href="/login" className="text-indigo-500 hover:text-indigo-400 hover:underline font-bold cursor-pointer transition-all duration-300 ease-in-out">Entre aqui</Link>
-            </div>
           </form>
+
+          {/* Login Link */}
+          <div className="text-center mt-[-8px]">
+            <Link href="/login" className="text-sm text-text-muted opacity-70 hover:opacity-100 transition-all font-medium">Já tem uma conta? Entre aqui</Link>
+          </div>
 
         </div>
       </div>

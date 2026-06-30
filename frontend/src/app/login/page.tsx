@@ -111,11 +111,12 @@ export default async function LoginPage(props: { searchParams: Promise<{ error?:
               Entrar
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </button>
+          </form>
+
           {/* Signup Link */}
-          <div className="text-center text-text-muted text-sm mt-[-8px]">
+          <div className="text-center text-text-muted text-sm mt-2">
             Não tem uma conta? <Link href="/register" className="text-indigo-500 hover:text-indigo-400 hover:underline font-bold cursor-pointer transition-all duration-300 ease-in-out">Cadastre-se</Link>
           </div>
-          </form>
 
         </div>
       </div>
