@@ -1,5 +1,8 @@
 'use client'
 
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 export interface Task {
   id: string;
   title: string;
@@ -14,8 +17,29 @@ interface TaskCardProps {
 }
 
 export function TaskCard({ task }: TaskCardProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id, data: { type: 'Task', task } });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
+  };
+
   return (
-    <div className="bg-surface border border-border p-4 rounded-lg shadow-sm hover:border-primary/50 transition-colors cursor-grab active:cursor-grabbing mb-3 group">
+    <div 
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`bg-surface border p-4 rounded-lg shadow-sm hover:border-primary/50 transition-colors cursor-grab active:cursor-grabbing mb-3 group relative ${isDragging ? 'border-primary shadow-primary/20' : 'border-border'}`}
+    >
       <div className="flex justify-between items-start mb-2">
         <h4 className="text-sm font-semibold text-white leading-tight pr-2">
           {task.title || task.service_name || 'Agendamento'}
