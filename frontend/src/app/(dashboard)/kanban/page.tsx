@@ -12,39 +12,27 @@ export default async function KanbanPage() {
     redirect('/login')
   }
 
-  // Buscar tarefas no banco com as informações do agendamento vinculado
-  const { data: tasks, error } = await supabase
-    .from('tasks')
+  // Buscar agendamentos no banco para popular o Kanban
+  const { data: appointments, error } = await supabase
+    .from('appointments')
     .select(`
       id,
-      title,
+      service_name,
       status,
-      appointments (
-        service_name,
-        profiles!appointments_client_id_fkey ( full_name )
-      )
+      profiles!appointments_client_id_fkey ( full_name )
     `)
-    .in('status', ['A Fazer', 'Em Andamento', 'Concluído'])
-    .order('created_at', { ascending: false })
+    .in('status', ['pendente', 'confirmado', 'completed'])
+    .order('date', { ascending: false })
 
   // Transformar os dados retornados para o tipo esperado pelo KanbanBoard
-  const formattedTasks = (tasks || []).map((t: any) => {
-    // Mapeia o status do DB para a interface do Board
-    const statusMap: Record<string, 'todo' | 'in_progress' | 'done'> = {
-      'A Fazer': 'todo',
-      'Em Andamento': 'in_progress',
-      'Concluído': 'done'
-    };
-    
-    return {
-      id: t.id,
-      title: t.title || 'Sem Título',
-      status: statusMap[t.status] || 'todo',
-      client_name: t.appointments?.profiles?.full_name || 'Desconhecido',
-      service_name: t.appointments?.service_name,
-      priority: 'medium', // Na Sprint 4 podemos adicionar no DB
-    }
-  })
+  const formattedTasks = (appointments || []).map((apt: any) => ({
+    id: apt.id,
+    title: apt.service_name || 'Sem Título',
+    status: apt.status, // 'pendente', 'confirmado', 'completed'
+    client_name: apt.profiles?.full_name || 'Cliente',
+    service_name: apt.service_name,
+    priority: 'medium',
+  }))
 
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background">
