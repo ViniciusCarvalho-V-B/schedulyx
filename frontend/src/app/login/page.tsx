@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { login, signup } from "@/app/actions/auth";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default async function LoginPage(props: { searchParams: Promise<{ error?: string }> }) {
   const searchParams = await props.searchParams;
