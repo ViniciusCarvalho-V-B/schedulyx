@@ -17,6 +17,7 @@ CREATE TABLE appointments (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     client_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
     professional_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+    service_name TEXT NOT NULL,
     date DATE NOT NULL,
     time TIME NOT NULL,
     price DECIMAL(10, 2) NOT NULL DEFAULT 0.00,

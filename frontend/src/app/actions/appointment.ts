@@ -25,10 +25,10 @@ export async function createAppointment(formData: FormData) {
   const { error } = await supabase.from('appointments').insert({
     client_id: user.id, // Simulando que o agendamento pertence a quem cria (neste MVP)
     service_name: serviceName,
-    appointment_date: date,
-    appointment_time: time,
+    date: date,
+    time: time,
     price: price,
-    status: 'confirmed' // Para disparar a Trigger de criação da Task!
+    status: 'confirmado' // Para disparar a Trigger de criação da Task!
   })
 
   if (error) {

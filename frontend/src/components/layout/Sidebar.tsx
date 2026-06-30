@@ -4,16 +4,24 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import { DeleteAccountModal } from '@/components/DeleteAccountModal'
 
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setUser(data.user)
+        supabase.from('profiles').select('avatar_url').eq('id', data.user.id).single()
+          .then(({ data: profileData }) => {
+            if (profileData) setProfile(profileData)
+          })
+      }
+    })
   }, [])
 
   const handleLogout = async () => {
@@ -61,19 +69,22 @@ export default function Sidebar() {
 
       <div className="flex flex-col border-t border-border pt-4 mt-auto space-y-4 px-3 pb-6">
         <div className="flex items-center gap-3 px-2">
-          <div className="w-9 h-9 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-white font-bold text-sm shadow-inner shrink-0">
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
+          <div className="w-9 h-9 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-white font-bold text-sm shadow-inner shrink-0 overflow-hidden">
+            {profile?.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              user?.email?.charAt(0).toUpperCase() || 'U'
+            )}
           </div>
-          <div className="flex flex-col overflow-hidden flex-1">
-            <span className="text-sm font-medium text-white truncate">Meu Perfil</span>
-            <span className="text-xs text-text-muted truncate">{user?.email || 'Carregando...'}</span>
-          </div>
+          <Link href="/settings" className="flex flex-col overflow-hidden flex-1 group hover:cursor-pointer">
+            <span className="text-sm font-medium text-white truncate group-hover:text-primary transition-colors">Meu Perfil</span>
+            <span className="text-xs text-text-muted truncate group-hover:text-text-muted transition-colors">{user?.email || 'Carregando...'}</span>
+          </Link>
           <button onClick={handleLogout} className="text-text-muted hover:text-white transition-colors p-1" title="Sair">
             <span className="material-symbols-outlined text-[20px]">logout</span>
           </button>
         </div>
-        
-        <DeleteAccountModal />
       </div>
     </aside>
   );

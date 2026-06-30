@@ -1,4 +1,15 @@
-export function FinancialSummary() {
+interface FinancialSummaryProps {
+  receita: number;
+  receitaPrevista?: number;
+  despesa: number;
+  lucro: number;
+}
+
+export function FinancialSummary({ receita, receitaPrevista = 0, despesa, lucro }: FinancialSummaryProps) {
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Receita Bruta */}
@@ -7,10 +18,12 @@ export function FinancialSummary() {
           <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
             <span className="material-symbols-outlined text-[18px] text-success">payments</span>
           </div>
-          <span className="text-sm font-medium text-text-muted">Receita Bruta</span>
+          <span className="text-sm font-medium text-text-muted">Receita Realizada</span>
         </div>
-        <span className="text-3xl font-bold text-white mb-1">R$ 0,00</span>
-        <span className="text-xs text-text-muted">No período selecionado</span>
+        <span className="text-3xl font-bold text-white mb-1">{formatCurrency(receita)}</span>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-xs text-text-muted bg-surface-container-high px-2 py-1 rounded">A receber: {formatCurrency(receitaPrevista)}</span>
+        </div>
       </div>
 
       {/* Despesas */}
@@ -21,7 +34,7 @@ export function FinancialSummary() {
           </div>
           <span className="text-sm font-medium text-text-muted">Despesas</span>
         </div>
-        <span className="text-3xl font-bold text-white mb-1">R$ 0,00</span>
+        <span className="text-3xl font-bold text-white mb-1">{formatCurrency(despesa)}</span>
         <span className="text-xs text-text-muted">No período selecionado</span>
       </div>
 
@@ -34,7 +47,7 @@ export function FinancialSummary() {
           </div>
           <span className="text-sm font-medium text-text-muted">Lucro Líquido</span>
         </div>
-        <span className="text-3xl font-bold text-primary mb-1 relative z-10">R$ 0,00</span>
+        <span className="text-3xl font-bold text-primary mb-1 relative z-10">{formatCurrency(lucro)}</span>
         <span className="text-xs text-text-muted relative z-10">Receita - Despesas</span>
       </div>
     </div>
