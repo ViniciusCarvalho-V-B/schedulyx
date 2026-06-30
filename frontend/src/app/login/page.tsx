@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { login, signup } from "@/app/actions/auth";
 
-export default function LoginPage() {
+export default async function LoginPage(props: { searchParams: Promise<{ error?: string }> }) {
+  const searchParams = await props.searchParams;
+  const error = searchParams?.error;
   return (
     <div className="h-screen w-full overflow-hidden flex selection:bg-primary-container selection:text-white">
       {/* Left Column: Brand Presentation */}
@@ -68,8 +71,14 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form className="flex flex-col gap-6" method="POST" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-6" action={login}>
             
+            {error && (
+              <div className="bg-error/10 border border-error text-error text-sm px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
             {/* Email */}
             <div className="flex flex-col gap-2">
               <label className="text-xs font-medium text-text-muted" htmlFor="email">Email</label>
@@ -137,7 +146,7 @@ export default function LoginPage() {
 
           {/* Signup Link */}
           <p className="text-center text-text-muted text-sm">
-            Não tem uma conta? <Link href="#" className="text-primary hover:underline font-medium">Cadastre-se</Link>
+            Não tem uma conta? <button type="submit" formAction={signup} className="text-primary hover:underline font-medium">Cadastre-se</button>
           </p>
 
         </div>
