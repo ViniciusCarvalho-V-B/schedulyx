@@ -4,3 +4,4 @@ reportlab
 supabase
 pydantic
 pytest
+python-dotenv
