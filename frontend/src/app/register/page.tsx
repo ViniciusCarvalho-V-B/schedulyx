@@ -17,6 +17,14 @@ export default function RegisterPage() {
     setErrorState(null)
     
     const formData = new FormData(e.currentTarget)
+    const password = formData.get('password') as string
+    const confirmPassword = formData.get('confirmPassword') as string
+
+    if (password !== confirmPassword) {
+      setErrorState("As senhas não coincidem. Tente novamente.")
+      setIsLoading(false)
+      return
+    }
     
     try {
       const result = await signUpWithPassword(formData)
@@ -137,9 +145,26 @@ export default function RegisterPage() {
             {/* Password */}
             <div className="flex flex-col gap-2">
               <label className="text-xs font-medium text-text-muted" htmlFor="password">Senha Segura</label>
-              {/* O PasswordInput precisa suportar o disabled, se não tiver, o input interno pode continuar editável. Por segurança adicionamos disabled no form parent ou wrapper */}
               <div className={`transition-all duration-300 ease-in-out ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
                 <PasswordInput />
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-medium text-text-muted" htmlFor="confirmPassword">Confirmação de Senha</label>
+              <div className={`transition-all duration-300 ease-in-out ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-[20px]">lock</span>
+                  <input 
+                    className="w-full bg-background border border-border rounded-lg py-2.5 pl-10 pr-3 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-300 ease-in-out" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    placeholder="••••••••" 
+                    required 
+                    type="password" 
+                  />
+                </div>
               </div>
             </div>
 
@@ -164,7 +189,7 @@ export default function RegisterPage() {
             
             {/* Login Link */}
             <div className="text-center text-text-muted text-sm mt-[-8px]">
-              Já tem uma conta? <Link href="/login" className="text-primary hover:underline font-medium cursor-pointer transition-all duration-300 ease-in-out">Entre aqui</Link>
+              Já tem uma conta? <Link href="/login" className="text-indigo-500 hover:text-indigo-400 hover:underline font-bold cursor-pointer transition-all duration-300 ease-in-out">Entre aqui</Link>
             </div>
           </form>
 
