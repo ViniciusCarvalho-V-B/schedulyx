@@ -30,9 +30,10 @@ export default async function FinancePage() {
   let despesas = 0
 
   txs.forEach((tx) => {
-    if (tx.type === 'entrada' && tx.status === 'pago') {
+    // Handling both legacy 'entrada'/'saida' and new 'income'/'expense' trigger values
+    if ((tx.type === 'entrada' || tx.type === 'income') && tx.status === 'pago') {
       receitaRealizada += Number(tx.amount)
-    } else if (tx.type === 'saida') {
+    } else if (tx.type === 'saida' || tx.type === 'expense') {
       despesas += Number(tx.amount)
     }
   })

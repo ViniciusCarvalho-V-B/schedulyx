@@ -2,9 +2,11 @@ interface Transaction {
   id: string;
   description: string;
   amount: number;
-  type: 'entrada' | 'saida';
+  type: 'entrada' | 'saida' | 'income' | 'expense';
   date: string;
 }
+
+const isIncome = (type: string) => type === 'entrada' || type === 'income';
 
 import { EditTransactionModal } from './EditTransactionModal'
 
@@ -49,17 +51,17 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                 <td className="px-6 py-4 text-white font-medium">{tx.description}</td>
                 <td className="px-6 py-4">
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
-                    tx.type === 'entrada' 
+                    isIncome(tx.type)
                       ? 'bg-success/10 text-success border-success/20' 
                       : 'bg-error/10 text-error border-error/20'
                   }`}>
-                    {tx.type === 'entrada' ? 'Receita' : 'Despesa'}
+                    {isIncome(tx.type) ? 'Receita' : 'Despesa'}
                   </span>
                 </td>
                 <td className={`px-6 py-4 font-bold text-right ${
-                  tx.type === 'entrada' ? 'text-success' : 'text-error'
+                  isIncome(tx.type) ? 'text-success' : 'text-error'
                 }`}>
-                  {tx.type === 'entrada' ? '+' : '-'} {formatCurrency(tx.amount)}
+                  {isIncome(tx.type) ? '+' : '-'} {formatCurrency(tx.amount)}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <EditTransactionModal transaction={tx as any} />

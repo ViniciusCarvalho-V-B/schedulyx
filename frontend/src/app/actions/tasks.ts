@@ -2,7 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 
-export type TaskStatus = 'pendente' | 'confirmado' | 'concluido'
+export type TaskStatus = 'pendente' | 'confirmado' | 'completed'
 
 export async function updateTaskStatus(taskId: string, newStatus: TaskStatus) {
   try {

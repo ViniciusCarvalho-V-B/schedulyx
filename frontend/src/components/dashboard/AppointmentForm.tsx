@@ -102,15 +102,15 @@ export function AppointmentForm() {
             </div>
             
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted">Status Inicial</label>
-              <select 
+              <label className="text-xs font-medium text-text-muted">Status</label>
+              <select
                 name="status"
                 defaultValue="pendente"
-                className="w-full bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+                className="bg-surface-container-high border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
               >
                 <option value="pendente">Pendente</option>
                 <option value="confirmado">Confirmado</option>
-                <option value="concluido">Concluído</option>
+                <option value="completed">Concluído</option>
               </select>
             </div>
           </div>
