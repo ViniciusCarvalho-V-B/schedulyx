@@ -11,12 +11,10 @@ app = FastAPI(title="Schedulyx API", description="ERP Unified API", version="1.0
 # ==============================================================================
 # Supabase Configuration
 # ==============================================================================
-# To use the official Supabase Python client, we need the URL and Key.
-# We will uncomment and use this once you provide the API keys.
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 
-# supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.get("/")
 def read_root():
@@ -24,4 +22,11 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "database_configured": bool(os.getenv("DATABASE_URL"))}
+    return {"status": "ok", "supabase_configured": bool(SUPABASE_URL and SUPABASE_KEY)}
+
+@app.get("/api/appointments")
+def get_appointments():
+    # Example endpoint fetching from the appointments table
+    response = supabase.table("appointments").select("*").execute()
+    return {"data": response.data}
+
