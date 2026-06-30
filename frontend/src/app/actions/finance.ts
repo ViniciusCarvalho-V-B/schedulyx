@@ -39,3 +39,64 @@ export async function createTransaction(formData: FormData) {
   revalidatePath('/finance')
   return { success: true }
 }
+
+export async function updateTransaction(id: string, formData: FormData) {
+  const supabase = await createClient()
+
+  const description = formData.get('description') as string
+  const amountStr = formData.get('amount') as string
+  const type = formData.get('type') as string
+  const status = formData.get('status') as string
+  
+  if (!description || !amountStr || !type || !status) {
+    return { error: 'Preencha todos os campos da transação.' }
+  }
+
+  const amount = parseFloat(amountStr)
+  if (isNaN(amount) || amount <= 0) {
+    return { error: 'O valor da transação deve ser maior que zero.' }
+  }
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const { error } = await supabase
+    .from('transactions')
+    .update({
+      description,
+      amount,
+      type,
+      status
+    })
+    .eq('id', id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/finance')
+  return { success: true }
+}
+
+export async function deleteTransaction(id: string) {
+  const supabase = await createClient()
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    return { error: 'Usuário não autenticado.' }
+  }
+
+  const { error } = await supabase
+    .from('transactions')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/finance')
+  return { success: true }
+}

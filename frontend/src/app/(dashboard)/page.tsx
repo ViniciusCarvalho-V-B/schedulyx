@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { AppointmentForm } from '@/components/dashboard/AppointmentForm'
+import { EditAppointmentModal } from '@/components/dashboard/EditAppointmentModal'
 import Sidebar from '@/components/layout/Sidebar'
 
 export default async function DashboardPage() {
@@ -37,6 +38,7 @@ export default async function DashboardPage() {
                     <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Horário</th>
                     <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Valor</th>
                     <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Status</th>
+                    <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px] text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -55,12 +57,15 @@ export default async function DashboardPage() {
                         {apt.status === 'confirmado' && (
                           <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Confirmado</span>
                         )}
-                        {apt.status === 'concluido' && (
+                        {apt.status === 'concluído' && (
                           <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Concluído</span>
                         )}
                         {apt.status === 'cancelado' && (
                           <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-error/20 text-error border border-error/30">Cancelado</span>
                         )}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <EditAppointmentModal appointment={apt as any} />
                       </td>
                     </tr>
                   ))}

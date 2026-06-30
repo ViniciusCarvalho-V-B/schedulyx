@@ -6,6 +6,8 @@ interface Transaction {
   date: string;
 }
 
+import { EditTransactionModal } from './EditTransactionModal'
+
 export function TransactionTable({ transactions }: { transactions: Transaction[] }) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -29,6 +31,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Descrição</th>
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px]">Tipo</th>
             <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px] text-right">Valor</th>
+            <th className="px-6 py-4 font-medium uppercase tracking-wider text-[11px] text-right">Ações</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -57,6 +60,9 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                   tx.type === 'entrada' ? 'text-success' : 'text-error'
                 }`}>
                   {tx.type === 'entrada' ? '+' : '-'} {formatCurrency(tx.amount)}
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <EditTransactionModal transaction={tx as any} />
                 </td>
               </tr>
             ))
