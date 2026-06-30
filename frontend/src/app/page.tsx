@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { AppointmentForm } from '@/components/dashboard/AppointmentForm'
-import { DeleteAccountModal } from '@/components/DeleteAccountModal'
+import Sidebar from '@/components/layout/Sidebar'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -16,52 +16,13 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex w-full">
-      {/* Sidebar - Muted Nordic Style */}
-      <aside className="w-64 border-r border-border bg-surface p-6 flex flex-col justify-between hidden md:flex">
-        <div>
-          <div className="flex items-center gap-3 mb-10">
-            <svg fill="none" height="32" viewBox="0 0 40 40" width="32" xmlns="http://www.w3.org/2000/svg">
-              <rect height="16" rx="2" stroke="#1E293B" strokeWidth="2" width="16" x="8" y="8" />
-              <rect height="16" rx="2" stroke="#1E293B" strokeWidth="2" width="16" x="16" y="16" />
-              <rect fill="#d97707" height="8" rx="1" style={{ filter: "drop-shadow(0px 0px 8px rgba(217,119,7,0.6))" }} width="8" x="16" y="16" />
-            </svg>
-            <span className="text-xl font-bold text-white tracking-tight">schedulyx</span>
-          </div>
-          <nav className="flex flex-col gap-2">
-            <div className="px-4 py-2.5 bg-primary-container/10 border border-primary/20 text-primary rounded-lg font-medium text-sm flex items-center gap-3">
-              <span className="material-symbols-outlined text-[20px]">calendar_month</span>
-              Agenda
-            </div>
-            <div className="px-4 py-2.5 text-text-muted hover:text-white rounded-lg font-medium text-sm flex items-center gap-3 cursor-pointer transition-colors">
-              <span className="material-symbols-outlined text-[20px]">view_kanban</span>
-              Kanban
-            </div>
-            <div className="px-4 py-2.5 text-text-muted hover:text-white rounded-lg font-medium text-sm flex items-center gap-3 cursor-pointer transition-colors">
-              <span className="material-symbols-outlined text-[20px]">payments</span>
-              Finanças
-            </div>
-          </nav>
-        </div>
-        
-        {/* User Info & Settings */}
-        <div className="flex flex-col border-t border-border pt-4 mt-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-9 h-9 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-white font-bold text-sm shadow-inner shrink-0">
-              {user?.email?.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-medium text-white truncate">Meu Perfil</span>
-              <span className="text-xs text-text-muted truncate w-36">{user?.email}</span>
-            </div>
-          </div>
-          <DeleteAccountModal />
-        </div>
-      </aside>
+      {/* Sidebar - Componente Unificado */}
+      <Sidebar />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+      <main className="flex-1 flex flex-col h-screen overflow-hidden md:ml-64 w-full">
         {/* Header */}
-        <header className="h-20 border-b border-border bg-surface/80 backdrop-blur-md flex items-center justify-between px-8 shrink-0">
+        <header className="h-20 border-b border-border bg-surface flex items-center justify-between px-8 shrink-0 z-10 relative">
           <h1 className="text-2xl font-bold text-white tracking-tight">Sua Agenda</h1>
           {/* Componente que engatilha o Modal */}
           <AppointmentForm />
