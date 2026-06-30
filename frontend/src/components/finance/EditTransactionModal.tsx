@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { updateTransaction, deleteTransaction } from '@/app/actions/finance'
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
+import { toast } from 'sonner'
+import { Edit2, X, FileText, DollarSign, ArrowRightLeft, CheckCircle2, Trash2 } from 'lucide-react'
 
 interface Transaction {
   id: string;
@@ -12,11 +14,12 @@ interface Transaction {
   type: string;
   status: string;
   date: string;
+  category?: string;
+  transaction_date?: string;
 }
 
 export function EditTransactionModal({ transaction }: { transaction: Transaction }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
@@ -25,45 +28,52 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
   
   const initialType = transaction.type === 'entrada' ? 'income' : transaction.type === 'saida' ? 'expense' : transaction.type
   const [transactionType, setTransactionType] = useState(initialType)
+  const [status, setStatus] = useState(transaction.status)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   const handleSubmit = async (formData: FormData) => {
-    setError(null)
     setIsPending(true)
+    
+    // Inject state overrides
+    formData.append('type', transactionType)
+    formData.append('status', status)
     
     const result = await updateTransaction(transaction.id, formData)
     
     if (result?.error) {
-      setError(result.error)
+      toast.error(result.error)
       setIsPending(false)
     } else {
+      toast.success('Transação atualizada com sucesso!')
       setIsOpen(false)
       setIsPending(false)
     }
   }
 
   const handleDelete = async () => {
-    setError(null)
     setIsDeleting(true)
-    
     const result = await deleteTransaction(transaction.id)
-    
     if (result?.error) {
-      setError(result.error)
+      toast.error(result.error)
       setIsDeleting(false)
       setShowConfirm(false)
     } else {
+      toast.success('Transação excluída.')
       setIsOpen(false)
       setIsDeleting(false)
       setShowConfirm(false)
     }
   }
 
+  const statusOptions = transactionType === 'income' 
+    ? [{ value: 'pago', label: 'Recebido' }, { value: 'pendente', label: 'A Receber' }]
+    : [{ value: 'pago', label: 'Pago' }, { value: 'pendente', label: 'A Pagar' }]
+
   const modalContent = isOpen ? (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -71,40 +81,47 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
       />
       
       {/* Modal */}
-      <div className="relative bg-surface border border-border rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="p-6 border-b border-border flex justify-between items-center">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="material-symbols-outlined text-[24px]">edit</span>
-            Editar Transação
-          </h2>
+      <main className="relative z-[110] w-full max-w-md bg-surface border border-outline-variant/30 rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        
+        {/* Modal Header */}
+        <header className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/30 bg-surface">
+          <div className="flex items-center gap-3">
+            <Edit2 className="w-5 h-5 text-text-muted" />
+            <h2 className="text-lg font-semibold text-white">Editar Transação</h2>
+          </div>
           <button 
             onClick={() => setIsOpen(false)}
-            className="text-text-muted hover:text-white transition-colors"
+            className="text-text-muted hover:text-white transition-colors p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-primary/50"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <X className="w-5 h-5" />
           </button>
-        </div>
+        </header>
 
-        <form ref={formRef} action={handleSubmit} className="p-6 flex flex-col gap-5">
-          {error && (
-            <div className="bg-error/10 border border-error text-error text-sm px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
-
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-medium text-text-muted">Descrição</label>
+        {/* Modal Body */}
+        <form ref={formRef} action={handleSubmit} id={`edit-form-${transaction.id}`} className="p-6 flex flex-col gap-5 overflow-y-auto max-h-[70vh]">
+          
+          {/* Field Group: Description */}
+          <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex flex-col gap-3">
+            <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
+              <FileText className="w-4 h-4" />
+              Descrição
+            </label>
             <input 
               name="description"
               required
               defaultValue={transaction.description}
-              className="bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+              className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted">Valor (R$)</label>
+          {/* Field Group: Value and Type */}
+          <div className="flex flex-col sm:flex-row gap-5 bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4">
+            
+            <div className="flex-1 flex flex-col gap-3">
+              <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
+                <DollarSign className="w-4 h-4" />
+                Valor (R$)
+              </label>
               <input 
                 name="amount"
                 type="number"
@@ -112,75 +129,91 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
                 min="0.01"
                 required
                 defaultValue={transaction.amount}
-                className="bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+                className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors sm:text-sm"
               />
             </div>
             
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-text-muted mb-1 block">Tipo</label>
-              <select
-                name="type"
-                value={transactionType}
-                onChange={(e) => setTransactionType(e.target.value)}
-                required
-                className="w-full bg-surface-container-low border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
-              >
-                <option value="income">Receita</option>
-                <option value="expense">Despesa</option>
-              </select>
+            <div className="flex-1 flex flex-col gap-3">
+              <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
+                <ArrowRightLeft className="w-4 h-4" />
+                Tipo
+              </label>
+              <div className="relative">
+                <select 
+                  name="type_dummy" // the real type is injected via state
+                  value={transactionType}
+                  onChange={(e) => {
+                    setTransactionType(e.target.value)
+                    setStatus('pago') // reset status on type change
+                  }}
+                  className="appearance-none w-full bg-surface-container-low border border-primary/50 text-white rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors sm:text-sm"
+                >
+                  <option value="income">Receita</option>
+                  <option value="expense">Despesa</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-primary">
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
             </div>
+
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-medium text-text-muted">Status</label>
-            <select 
-              name="status" 
-              defaultValue={transaction.status}
-              className="bg-background border border-border rounded-lg py-2.5 px-3 text-on-surface text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
-            >
-              {transactionType === 'income' ? (
-                <>
-                  <option value="pago">Recebido</option>
-                  <option value="pendente">A Receber</option>
-                </>
-              ) : (
-                <>
-                  <option value="pago">Pago</option>
-                  <option value="pendente">A Pagar</option>
-                </>
-              )}
-            </select>
-          </div>
-
-          <div className="pt-2 flex justify-between items-center mt-2">
-            <button 
-              type="button" 
-              onClick={() => setShowConfirm(true)}
-              disabled={isDeleting || isPending}
-              className="px-4 py-2 rounded-lg text-sm font-medium text-error hover:bg-error/10 transition-colors disabled:opacity-50 flex items-center gap-1"
-            >
-              <span className="material-symbols-outlined text-[18px]">delete</span>
-              {isDeleting ? 'Excluindo...' : 'Excluir'}
-            </button>
-            <div className="flex gap-3">
-              <button 
-                type="button" 
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-text-muted hover:text-white hover:bg-surface-container-high transition-colors"
+          {/* Field Group: Status */}
+          <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex flex-col gap-3">
+            <label className="flex items-center gap-2 text-sm font-medium text-text-muted">
+              <CheckCircle2 className="w-4 h-4" />
+              Status
+            </label>
+            <div className="relative">
+              <select 
+                name="status_dummy" 
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="appearance-none w-full bg-surface-container-low border border-primary/50 text-white rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors sm:text-sm"
               >
-                Cancelar
-              </button>
-              <button 
-                type="submit" 
-                disabled={isPending || isDeleting}
-                className="px-4 py-2 rounded-lg text-sm font-medium bg-primary hover:bg-primary-hover text-surface-container-lowest transition-colors disabled:opacity-50 flex items-center gap-2"
-              >
-                {isPending ? 'Salvando...' : 'Salvar Alterações'}
-              </button>
+                {statusOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-primary">
+                <ChevronDown className="w-4 h-4" />
+              </div>
             </div>
           </div>
         </form>
-      </div>
+
+        {/* Modal Footer */}
+        <footer className="px-6 py-5 border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest/30">
+          <button 
+            type="button" 
+            onClick={() => setShowConfirm(true)}
+            disabled={isDeleting || isPending}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-error/20 text-error hover:bg-error/10 transition-colors focus:outline-none focus:ring-1 focus:ring-error text-sm font-medium disabled:opacity-50"
+          >
+            <Trash2 className="w-4 h-4" />
+            Excluir
+          </button>
+          
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <button 
+              type="button" 
+              onClick={() => setIsOpen(false)}
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-outline-variant/50 text-text-muted hover:text-white hover:bg-surface-container transition-colors focus:outline-none focus:ring-1 focus:ring-outline text-sm font-medium"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              form={`edit-form-${transaction.id}`}
+              disabled={isPending || isDeleting}
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface text-sm font-medium shadow-lg shadow-primary/20 disabled:opacity-50"
+            >
+              {isPending ? 'Salvando...' : 'Salvar Alterações'}
+            </button>
+          </div>
+        </footer>
+      </main>
     </div>
   ) : null
 
@@ -191,7 +224,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
         className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors"
         title="Editar Transação"
       >
-        <span className="material-symbols-outlined text-[18px]">edit</span>
+        <Edit2 className="w-4 h-4" />
       </button>
       
       {mounted && createPortal(modalContent, document.body)}
@@ -205,5 +238,13 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
         isDeleting={isDeleting}
       />
     </>
+  )
+}
+
+function ChevronDown(props: any) {
+  return (
+    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+    </svg>
   )
 }

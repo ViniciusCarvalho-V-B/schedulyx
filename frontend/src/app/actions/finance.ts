@@ -10,6 +10,9 @@ export async function createTransaction(formData: FormData) {
   const amountStr = formData.get('amount') as string
   const type = formData.get('type') as string
   const status = formData.get('status') as string
+  const category = formData.get('category') as string || null
+  const date = formData.get('data') as string
+  const time = formData.get('hora') as string
   
   if (!description || !amountStr || !type || !status) {
     return { error: 'Preencha todos os campos da transação.' }
@@ -25,11 +28,19 @@ export async function createTransaction(formData: FormData) {
     return { error: 'Usuário não autenticado.' }
   }
 
+  let transaction_date = null
+  if (date) {
+    const timeStr = time ? `${time}:00` : '00:00:00'
+    transaction_date = new Date(`${date}T${timeStr}`).toISOString()
+  }
+
   const { error } = await supabase.from('transactions').insert({
     description: description,
     amount: amount,
     type: type,
-    status: status
+    status: status,
+    category: category,
+    ...(transaction_date && { transaction_date })
   })
 
   if (error) {
@@ -47,6 +58,9 @@ export async function updateTransaction(id: string, formData: FormData) {
   const amountStr = formData.get('amount') as string
   const type = formData.get('type') as string
   const status = formData.get('status') as string
+  const category = formData.get('category') as string || null
+  const date = formData.get('data') as string
+  const time = formData.get('hora') as string
   
   if (!description || !amountStr || !type || !status) {
     return { error: 'Preencha todos os campos da transação.' }
@@ -62,14 +76,27 @@ export async function updateTransaction(id: string, formData: FormData) {
     return { error: 'Usuário não autenticado.' }
   }
 
+  let transaction_date = null
+  if (date) {
+    const timeStr = time ? `${time}:00` : '00:00:00'
+    transaction_date = new Date(`${date}T${timeStr}`).toISOString()
+  }
+
+  const updateData: any = {
+    description,
+    amount,
+    type,
+    status,
+    category
+  }
+  
+  if (transaction_date) {
+    updateData.transaction_date = transaction_date
+  }
+
   const { error } = await supabase
     .from('transactions')
-    .update({
-      description,
-      amount,
-      type,
-      status
-    })
+    .update(updateData)
     .eq('id', id)
 
   if (error) {

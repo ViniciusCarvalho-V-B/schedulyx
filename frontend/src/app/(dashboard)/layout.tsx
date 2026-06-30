@@ -1,4 +1,5 @@
 import Sidebar from '@/components/layout/Sidebar'
+import { Toaster } from 'sonner'
 
 export default function DashboardLayout({
   children,
@@ -12,6 +13,7 @@ export default function DashboardLayout({
       <div className="flex-1 flex flex-col md:ml-64 overflow-hidden h-full">
         {children}
       </div>
+      <Toaster theme="dark" position="bottom-right" />
     </div>
   )
 }
