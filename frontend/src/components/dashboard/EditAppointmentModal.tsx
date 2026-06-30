@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { updateAppointment, deleteAppointment } from '@/app/actions/appointment'
+import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
 
 interface Appointment {
   id: string;
@@ -19,6 +20,8 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+
+  const [showConfirm, setShowConfirm] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -42,9 +45,6 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
   }
 
   const handleDelete = async () => {
-    const confirm = window.confirm("Tem certeza que deseja excluir este agendamento? Essa ação removerá a tarefa do Kanban automaticamente.")
-    if (!confirm) return
-
     setError(null)
     setIsDeleting(true)
     
@@ -53,9 +53,11 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
     if (result?.error) {
       setError(result.error)
       setIsDeleting(false)
+      setShowConfirm(false)
     } else {
       setIsOpen(false)
       setIsDeleting(false)
+      setShowConfirm(false)
     }
   }
 
@@ -153,7 +155,7 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
           <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
             <button 
               type="button" 
-              onClick={handleDelete}
+              onClick={() => setShowConfirm(true)}
               disabled={isDeleting || loading}
               className="px-4 py-2 rounded-lg text-sm font-medium text-error hover:bg-error/10 transition-colors disabled:opacity-50 flex items-center gap-1"
             >
@@ -194,6 +196,15 @@ export function EditAppointmentModal({ appointment }: { appointment: Appointment
       </button>
 
       {mounted && createPortal(modalContent, document.body)}
+      
+      <ConfirmDeleteModal 
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleDelete}
+        title="Excluir Agendamento"
+        description="Tem certeza que deseja excluir este agendamento? A tarefa será removida do Kanban automaticamente."
+        isDeleting={isDeleting}
+      />
     </>
   )
 }

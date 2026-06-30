@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { updateTransaction, deleteTransaction } from '@/app/actions/finance'
+import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
 
 interface Transaction {
   id: string;
@@ -20,6 +21,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
   const [isDeleting, setIsDeleting] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const [mounted, setMounted] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -41,9 +43,6 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
   }
 
   const handleDelete = async () => {
-    const confirm = window.confirm("Tem certeza que deseja excluir permanentemente esta transação?")
-    if (!confirm) return
-
     setError(null)
     setIsDeleting(true)
     
@@ -52,9 +51,11 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
     if (result?.error) {
       setError(result.error)
       setIsDeleting(false)
+      setShowConfirm(false)
     } else {
       setIsOpen(false)
       setIsDeleting(false)
+      setShowConfirm(false)
     }
   }
 
@@ -140,7 +141,7 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
           <div className="pt-2 flex justify-between items-center mt-2">
             <button 
               type="button" 
-              onClick={handleDelete}
+              onClick={() => setShowConfirm(true)}
               disabled={isDeleting || isPending}
               className="px-4 py-2 rounded-lg text-sm font-medium text-error hover:bg-error/10 transition-colors disabled:opacity-50 flex items-center gap-1"
             >
@@ -180,6 +181,15 @@ export function EditTransactionModal({ transaction }: { transaction: Transaction
       </button>
       
       {mounted && createPortal(modalContent, document.body)}
+
+      <ConfirmDeleteModal 
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleDelete}
+        title="Excluir Transação"
+        description="Tem certeza que deseja excluir permanentemente esta transação financeira?"
+        isDeleting={isDeleting}
+      />
     </>
   )
 }
