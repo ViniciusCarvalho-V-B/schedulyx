@@ -1,59 +1,58 @@
 import { createClient } from '@/utils/supabase/server'
 import { KanbanBoard } from '@/components/kanban/KanbanBoard'
-import { redirect } from 'next/navigation'
 
 export default async function KanbanPage() {
   const supabase = await createClient()
-  
-  // Apenas admins ou profissionais deveriam ver isso livremente (RBAC), 
-  // mas como ajustamos o RLS, os dados serão filtrados corretamente.
+
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    redirect('/login')
-  }
 
-  // Buscar agendamentos no banco para popular o Kanban
-  const { data: appointments, error } = await supabase
+  // Buscar todos os agendamentos do usuário
+  const { data: appointments } = await supabase
     .from('appointments')
-    .select(`
-      id,
-      service_name,
-      status,
-      profiles!appointments_client_id_fkey ( full_name )
-    `)
-    .in('status', ['pendente', 'confirmado', 'completed'])
-    .order('date', { ascending: false })
+    .select('id, service_name, client_name, date, time, status, price')
+    .order('date', { ascending: true })
 
-  // Transformar os dados retornados para o tipo esperado pelo KanbanBoard
-  const formattedTasks = (appointments || []).map((apt: any) => ({
+  // Mapear para o formato de Task do Kanban
+  const tasks = (appointments || []).map(apt => ({
     id: apt.id,
-    title: apt.service_name || 'Sem Título',
-    status: apt.status, // 'pendente', 'confirmado', 'completed'
-    client_name: apt.profiles?.full_name || 'Cliente',
+    title: apt.service_name,
+    client_name: apt.client_name || undefined,
     service_name: apt.service_name,
-    priority: 'medium',
+    date: apt.date,
+    time: apt.time,
+    price: apt.price ? Number(apt.price) : undefined,
+    priority: 'medium' as const,
+    status: (apt.status || 'pendente') as 'pendente' | 'confirmado' | 'completed',
   }))
 
-  return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background">
-      {/* Header */}
-      <header className="h-20 border-b border-border bg-surface/80 backdrop-blur-md flex items-center justify-between px-8 shrink-0">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Fluxo Kanban</h1>
-          <p className="text-sm text-text-muted mt-1">Gerencie o status operacional dos seus agendamentos.</p>
-        </div>
-      </header>
+  const totalTasks = tasks.length
 
-      {/* Board Layout */}
-      <main className="flex-1 p-8 overflow-hidden flex flex-col">
-        {error ? (
-          <div className="w-full bg-error/10 border border-error p-4 rounded-xl text-error text-sm">
-            Erro ao carregar o Kanban: {error.message}
+  return (
+    <main className="flex-1 overflow-hidden bg-background flex flex-col p-6">
+      {/* Header do Board */}
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <div>
+          <h1 className="text-xl font-semibold text-on-surface">Quadro de Agendamentos</h1>
+          <p className="text-sm text-text-muted mt-1">
+            {totalTasks} {totalTasks === 1 ? 'agendamento' : 'agendamentos'} no total
+          </p>
+        </div>
+      </div>
+
+      {/* Kanban Board */}
+      {totalTasks > 0 ? (
+        <KanbanBoard initialTasks={tasks} />
+      ) : (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <span className="material-symbols-outlined text-5xl text-text-muted/30 mb-4 block">view_kanban</span>
+            <h3 className="text-lg font-medium text-on-surface mb-2">Nenhum agendamento ainda</h3>
+            <p className="text-sm text-text-muted max-w-sm">
+              Crie seu primeiro agendamento clicando em &quot;Novo Agendamento&quot; no canto superior direito.
+            </p>
           </div>
-        ) : (
-          <KanbanBoard initialTasks={formattedTasks} />
-        )}
-      </main>
-    </div>
-  )
+        </div>
+      )}
+    </main>
+  );
 }

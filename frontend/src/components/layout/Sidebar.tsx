@@ -31,60 +31,56 @@ export default function Sidebar() {
   }
 
   const navItems = [
-    { name: 'Agenda', path: '/', icon: 'calendar_month' },
+    { name: 'Dashboard', path: '/', icon: 'dashboard' },
+    { name: 'Agenda', path: '/agenda', icon: 'calendar_today' },
     { name: 'Kanban', path: '/kanban', icon: 'view_kanban' },
-    { name: 'Finanças', path: '/finance', icon: 'payments' },
+    { name: 'Financeiro', path: '/finance', icon: 'payments' },
   ]
 
   return (
-    <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 flex-col bg-surface border-r border-border z-40">
-      <div className="px-6 py-8 flex items-center gap-3 border-b border-border">
-        <svg fill="none" height="32" viewBox="0 0 40 40" width="32" xmlns="http://www.w3.org/2000/svg">
-          <rect height="16" rx="2" stroke="#1E293B" strokeWidth="2" width="16" x="8" y="8" />
-          <rect height="16" rx="2" stroke="#1E293B" strokeWidth="2" width="16" x="16" y="16" />
-          <rect fill="#d97707" height="8" rx="1" style={{ filter: "drop-shadow(0px 0px 8px rgba(217,119,7,0.6))" }} width="8" x="16" y="16" />
-        </svg>
-        <span className="text-xl font-bold text-white tracking-tight">schedulyx</span>
+    <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 flex-col bg-surface border-r border-border z-50 shrink-0">
+      <div className="px-6 py-6 flex items-center gap-4 border-b border-border h-16 shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center shrink-0">
+          <span className="material-symbols-outlined text-on-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_today</span>
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-on-surface tracking-tight">Schedulyx</h1>
+        </div>
       </div>
 
-      <nav className="flex-1 py-6 px-3 space-y-2">
+      <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
+          const isActive = pathname === item.path;
           return (
             <Link 
               key={item.path} 
               href={item.path} 
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 ease-in-out ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg font-label-md transition-all duration-200 ease-in-out ${
                 isActive 
-                  ? 'bg-primary-container/10 border border-primary/20 text-primary' 
-                  : 'text-text-muted hover:bg-surface-container-high hover:text-white border border-transparent'
+                  ? 'bg-surface-container-highest text-primary font-bold border-r-2 border-primary' 
+                  : 'text-text-muted hover:bg-surface-container-high hover:text-on-surface'
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-              <span>{item.name}</span>
+              <span className="material-symbols-outlined">{item.icon}</span>
+              <span className={isActive ? 'text-label-md font-label-md' : ''}>{item.name}</span>
             </Link>
           )
         })}
       </nav>
 
-      <div className="flex flex-col border-t border-border pt-4 mt-auto space-y-4 px-3 pb-6">
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-9 h-9 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-white font-bold text-sm shadow-inner shrink-0 overflow-hidden">
-            {profile?.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              user?.email?.charAt(0).toUpperCase() || 'U'
-            )}
-          </div>
-          <Link href="/settings" className="flex flex-col overflow-hidden flex-1 group hover:cursor-pointer">
-            <span className="text-sm font-medium text-white truncate group-hover:text-primary transition-colors">Meu Perfil</span>
-            <span className="text-xs text-text-muted truncate group-hover:text-text-muted transition-colors">{user?.email || 'Carregando...'}</span>
-          </Link>
-          <button onClick={handleLogout} className="text-text-muted hover:text-white transition-colors p-1" title="Sair">
-            <span className="material-symbols-outlined text-[20px]">logout</span>
-          </button>
-        </div>
+      <div className="px-3 pb-6 border-t border-border pt-4 space-y-1 shrink-0">
+        <Link href="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted font-label-md hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
+          <span className="material-symbols-outlined">account_circle</span>
+          <span>Profile</span>
+        </Link>
+        <Link href="/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted font-label-md hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
+          <span className="material-symbols-outlined">settings</span>
+          <span>Configurações</span>
+        </Link>
+        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted font-label-md hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out">
+          <span className="material-symbols-outlined">logout</span>
+          <span>Sair</span>
+        </button>
       </div>
     </aside>
   );

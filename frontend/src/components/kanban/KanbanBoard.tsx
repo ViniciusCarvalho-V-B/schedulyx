@@ -17,10 +17,17 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { KanbanColumn } from './KanbanColumn'
 import { Task, TaskCard } from './TaskCard'
 import { updateTaskStatus } from '@/app/actions/tasks'
+import { toast } from 'sonner'
 
 interface KanbanBoardProps {
   initialTasks: Task[];
 }
+
+const COLUMNS = [
+  { id: 'pendente' as const, title: 'A Fazer', color: 'bg-amber-500' },
+  { id: 'confirmado' as const, title: 'Em Andamento', color: 'bg-blue-500' },
+  { id: 'completed' as const, title: 'Concluído', color: 'bg-emerald-500' },
+]
 
 export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
@@ -29,17 +36,13 @@ export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3, // require a slight movement before dragging to allow normal clicks
+        distance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  const todoTasks = tasks.filter(t => t.status === 'pendente')
-  const inProgressTasks = tasks.filter(t => t.status === 'confirmado')
-  const doneTasks = tasks.filter(t => t.status === 'completed')
 
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
@@ -62,7 +65,6 @@ export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
 
     if (!isActiveTask) return;
 
-    // Se estiver movendo por cima de outra task
     if (isActiveTask && isOverTask) {
       setTasks(currentTasks => {
         const activeIndex = currentTasks.findIndex(t => t.id === activeId);
@@ -71,48 +73,48 @@ export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
         const activeTaskStatus = currentTasks[activeIndex].status;
         const overTaskStatus = currentTasks[overIndex].status;
 
-        // Optimistic Update: Mudou de coluna
         if (activeTaskStatus !== overTaskStatus) {
           const newTasks = [...currentTasks];
           newTasks[activeIndex] = { ...newTasks[activeIndex], status: overTaskStatus };
           return arrayMove(newTasks, activeIndex, overIndex);
         }
 
-        // Reordenou na mesma coluna
         return arrayMove(currentTasks, activeIndex, overIndex);
       });
     }
 
-    // Se estiver movendo para uma coluna vazia (direto no container)
     if (isActiveTask && isOverColumn) {
       setTasks(currentTasks => {
         const activeIndex = currentTasks.findIndex(t => t.id === activeId);
         const newTasks = [...currentTasks];
-        newTasks[activeIndex] = { ...newTasks[activeIndex], status: overId as any };
+        newTasks[activeIndex] = { ...newTasks[activeIndex], status: overId as Task['status'] };
         return arrayMove(newTasks, activeIndex, newTasks.length - 1);
       });
     }
   }
 
   async function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
+    const { active } = event;
     const dragTask = activeTask;
-    setActiveTask(null); // Clear active task immediately for overlay
+    setActiveTask(null);
     
-    if (!over || !dragTask) return;
+    if (!dragTask) return;
 
     const activeId = active.id;
     const activeTaskFinal = tasks.find(t => t.id === activeId);
     
-    // Check if the status actually changed during this drag session
     if (activeTaskFinal && dragTask.status !== activeTaskFinal.status) {
-      // Async Server Action - Dispara o update no Supabase em background
       const result = await updateTaskStatus(activeId as string, activeTaskFinal.status);
       
       if (!result.success) {
         console.error("Erro ao persistir status:", result.error);
-        alert(`Não foi possível salvar: ${result.error}`);
-        // Num cenário robusto, faríamos o rollback do estado aqui (tasks = initialTasks ou similar)
+        toast.error(`Não foi possível salvar: ${result.error}`);
+        // Rollback
+        setTasks(prev => prev.map(t => 
+          t.id === activeId ? { ...t, status: dragTask.status } : t
+        ));
+      } else {
+        toast.success('Status atualizado!')
       }
     }
   }
@@ -125,15 +127,21 @@ export function KanbanBoard({ initialTasks }: KanbanBoardProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex-1 flex gap-6 overflow-x-auto h-full items-start pb-4">
-        <KanbanColumn id="pendente" title="A Fazer (Pendente)" tasks={todoTasks} />
-        <KanbanColumn id="confirmado" title="Em Andamento (Confirmado)" tasks={inProgressTasks} />
-        <KanbanColumn id="completed" title="Concluído" tasks={doneTasks} />
+      <div className="flex-1 flex gap-6 overflow-x-auto h-full items-start pb-4 custom-scrollbar">
+        {COLUMNS.map(col => (
+          <KanbanColumn 
+            key={col.id}
+            id={col.id} 
+            title={col.title} 
+            tasks={tasks.filter(t => t.status === col.id)} 
+            color={col.color}
+          />
+        ))}
       </div>
 
       <DragOverlay>
         {activeTask ? (
-          <div className="opacity-80 rotate-2 scale-105 transition-transform cursor-grabbing">
+          <div className="opacity-90 rotate-2 scale-105 shadow-2xl shadow-primary/20">
             <TaskCard task={activeTask} />
           </div>
         ) : null}

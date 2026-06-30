@@ -82,3 +82,10 @@ body {
     border: 1px solid rgba(217, 119, 7, 0.3);
   }
 }
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #1E293B; border-radius: 4px; }
+  .time-grid-line { border-bottom: 1px solid #1E293B; position: absolute; width: 100%; }
+}
