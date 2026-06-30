@@ -35,15 +35,15 @@ export default async function LoginPage(props: { searchParams: Promise<{ error?:
         <div className="z-10 flex flex-wrap gap-2">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface-container-low/50 backdrop-blur-sm">
             <span className="material-symbols-outlined text-[16px] text-accent" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
-            <span className="text-[11px] font-bold text-text-muted uppercase">Smart Scheduling</span>
+            <span className="text-[11px] font-bold text-text-muted uppercase">Agenda Inteligente</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface-container-low/50 backdrop-blur-sm">
             <span className="material-symbols-outlined text-[16px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>view_kanban</span>
-            <span className="text-[11px] font-bold text-text-muted uppercase">Integrated Kanban</span>
+            <span className="text-[11px] font-bold text-text-muted uppercase">Kanban Integrado</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface-container-low/50 backdrop-blur-sm">
             <span className="material-symbols-outlined text-[16px] text-[#ffb695]" style={{ fontVariationSettings: "'FILL' 1" }}>payments</span>
-            <span className="text-[11px] font-bold text-text-muted uppercase">Automated Finance</span>
+            <span className="text-[11px] font-bold text-text-muted uppercase">Finanças Automatizadas</span>
           </div>
         </div>
       </div>
@@ -101,20 +101,7 @@ export default async function LoginPage(props: { searchParams: Promise<{ error?:
                 <label className="text-xs font-medium text-text-muted" htmlFor="password">Senha</label>
                 <Link className="text-xs font-medium text-primary hover:text-indigo-400 transition-colors cursor-pointer" href="/login?error=Recuperação+de+senha+disponível+em+breve">Esqueceu a senha?</Link>
               </div>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-[20px]">lock</span>
-                <input 
-                  className="w-full bg-background border border-border rounded-lg py-2.5 pl-10 pr-10 text-on-surface placeholder-text-muted text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all" 
-                  id="password" 
-                  name="password" 
-                  placeholder="••••••••" 
-                  required 
-                  type="password" 
-                />
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-white transition-colors cursor-pointer" type="button">
-                  <span className="material-symbols-outlined text-[20px]">visibility_off</span>
-                </button>
-              </div>
+              <PasswordInput />
             </div>
 
             {/* Submit Button */}
