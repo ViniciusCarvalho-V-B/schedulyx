@@ -14,7 +14,13 @@ export async function login(formData: FormData) {
   })
 
   if (error) {
-    return redirect('/login?error=Credenciais inválidas')
+    let errorMessage = 'Credenciais inválidas. Verifique seu e-mail e senha.'
+    if (error.message.includes('Email not confirmed')) {
+      errorMessage = 'Por favor, confirme seu e-mail antes de fazer login. (Ou desative a "Confirmação de E-mail" no painel do Supabase).'
+    } else if (error.message) {
+      errorMessage = error.message
+    }
+    return redirect(`/login?error=${encodeURIComponent(errorMessage)}`)
   }
 
   redirect('/')
