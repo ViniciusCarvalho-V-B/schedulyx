@@ -1,5 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
-import { AppointmentForm } from '@/components/AppointmentForm'
+import { AppointmentForm } from '@/components/dashboard/AppointmentForm'
 import { DeleteAccountModal } from '@/components/DeleteAccountModal'
 
 export default async function DashboardPage() {
