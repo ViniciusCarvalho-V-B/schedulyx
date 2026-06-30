@@ -71,3 +71,26 @@ export async function signUpWithPassword(formData: FormData) {
     return { error: "Erro interno do servidor durante o cadastro." }
   }
 }
+
+export async function signInWithGoogle() {
+  const supabase = await createClient()
+  
+  // O NEXT_PUBLIC_SITE_URL deve estar configurado no .env.local, ou fazemos fallback para localhost
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${siteUrl}/auth/callback`,
+    },
+  })
+
+  if (error) {
+    console.error("Erro no signInWithOAuth:", error)
+    return redirect('/login?error=Nao+foi+possivel+conectar+ao+Google')
+  }
+
+  if (data.url) {
+    redirect(data.url) // Redireciona para a página de consentimento do Google
+  }
+}
